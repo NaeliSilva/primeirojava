@@ -12,7 +12,7 @@ import algaworks.primeirojava.domain.repository.ClienteRepository;
 import algaworks.primeirojava.models.Cliente;
 
 @RestController
-public class clientecontroller {
+public class ClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;

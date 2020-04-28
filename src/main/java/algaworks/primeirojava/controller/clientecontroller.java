@@ -6,6 +6,7 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import algaworks.primeirojava.domain.repository.ClienteRepository;
@@ -20,13 +21,12 @@ public class clientecontroller {
 
     @GetMapping
     public List<Cliente> listar() {
-        // return clienteRepository.findAll();
-        return clienteRepository.findByNomeContaining("Silva");
+        return clienteRepository.findAll();
     }
 
     @GetMapping("/{clienteId}")
-    public ResponseEntity <Cliente> buscar(@PathVariable final Long clienteId) {
-        final Optional<Cliente> cliente = clienteRepository.findById(clienteId);
+    public ResponseEntity <Cliente> buscar(@PathVariable Long clienteId) {
+         Optional<Cliente> cliente = clienteRepository.findById(clienteId);
 
         if (cliente.isPresent()) {
             return ResponseEntity.ok(cliente.get());
@@ -36,6 +36,7 @@ public class clientecontroller {
     }
 
     @PostMapping
+    @ResponseStatus (HttpStatus.CREATED)
     public Cliente adicionar(@RequestBody Cliente cliente) {
     return clienteRepository.save(cliente);
 }

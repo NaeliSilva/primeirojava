@@ -14,7 +14,7 @@ import algaworks.primeirojava.models.Cliente;
 
 @RestController
 @RequestMapping("/clientes")
-public class clientecontroller {
+public class ClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;

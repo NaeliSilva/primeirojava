@@ -40,4 +40,28 @@ public class ClienteController {
     public Cliente adicionar(@RequestBody Cliente cliente) {
     return clienteRepository.save(cliente);
 }
+
+    @PutMapping("/{clienteId}")
+    public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId,
+            @RequestBody Cliente cliente ){
+
+         if (!clienteRepository.existsById(clienteId)){
+             return ResponseEntity.notFound().build();
+         }       
+         cliente.setId(clienteId);
+         cliente = clienteRepository.save(cliente);
+
+         return ResponseEntity.ok(cliente); 
+            }
+    @DeleteMapping("/{clienteId}")
+    public ResponseEntity<Void> remover (@PathVariable Long clienteId){
+        if(!clienteRepository.existsById(clienteId)){
+            return ResponseEntity.notFound().build();
+        }
+
+        clienteRepository.deleteById(clienteId);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

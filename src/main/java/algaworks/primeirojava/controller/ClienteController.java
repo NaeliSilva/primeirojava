@@ -1,5 +1,8 @@
 package algaworks.primeirojava.controller;
 
+import algaworks.primeirojava.dto.cliente.ClienteDTO;
+import algaworks.primeirojava.dto.cliente.CreateClienteDTO;
+import algaworks.primeirojava.service.ClienteService;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -18,48 +21,35 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private ClienteService service;
+
     @GetMapping
     public List<Cliente> listar() {
         return clienteRepository.findAll();
     }
 
     @GetMapping("/{clienteId}")
-    public ResponseEntity<Cliente> buscar(@PathVariable Long clienteId) {
-        Optional<Cliente> cliente = clienteRepository.findById(clienteId);
-
-        if (cliente.isPresent()) {
-            return ResponseEntity.ok(cliente.get());
-        }
-
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<ClienteDTO> buscar(@PathVariable Long clienteId) {
+        return ResponseEntity.of(service.buscaPorId(clienteId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-        return clienteRepository.save(cliente);
+    public ClienteDTO adicionar(@Valid @RequestBody CreateClienteDTO cliente) {
+        return service.create(cliente);
     }
 
     @PutMapping("/{clienteId}")
-    public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteId, @Valid @RequestBody Cliente cliente) {
-
-        if (!clienteRepository.existsById(clienteId)) {
-            return ResponseEntity.notFound().build();
-        }
-        cliente.setId(clienteId);
-        cliente = clienteRepository.save(cliente);
-
-        return ResponseEntity.ok(cliente);
+    public ResponseEntity<ClienteDTO> atualizar(@Valid @PathVariable Long clienteId, @Valid @RequestBody CreateClienteDTO cliente) {
+        return ResponseEntity.of(service.update(clienteId, cliente));
     }
 
     @DeleteMapping("/{clienteId}")
     public ResponseEntity<Void> remover(@PathVariable Long clienteId) {
-        if (!clienteRepository.existsById(clienteId)) {
+        if (!service.delete(clienteId)) {
             return ResponseEntity.notFound().build();
         }
-
-        clienteRepository.deleteById(clienteId);
         return ResponseEntity.noContent().build();
     }
-
 }

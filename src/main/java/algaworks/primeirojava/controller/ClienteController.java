@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +27,8 @@ public class ClienteController {
     }
 
     @GetMapping("/{clienteId}")
-    public ResponseEntity<Cliente> buscar(@PathVariable Long clienteId) {
-        Optional<Cliente> cliente = clienteRepository.findById(clienteId);
+    public ResponseEntity<Cliente> buscar(@PathVariable final Long clienteId) {
+        final Optional<Cliente> cliente = clienteRepository.findById(clienteId);
 
         if (cliente.isPresent()) {
             return ResponseEntity.ok(cliente.get());
@@ -40,12 +39,13 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
+    public Cliente adicionar(@Valid @RequestBody final Cliente cliente) {
         return cadastroClienteService.salvar(cliente);
     }
 
     @PutMapping("/{clienteId}")
-    public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteId, @Valid @RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> atualizar(@Valid @PathVariable final Long clienteId,
+            @Valid @RequestBody Cliente cliente) {
 
         if (!clienteRepository.existsById(clienteId)) {
             return ResponseEntity.notFound().build();
@@ -57,7 +57,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{clienteId}")
-    public ResponseEntity<Void> remover(@PathVariable Long clienteId) {
+    public ResponseEntity<Void> remover(@PathVariable final Long clienteId) {
         if (!clienteRepository.existsById(clienteId)) {
             return ResponseEntity.notFound().build();
         }

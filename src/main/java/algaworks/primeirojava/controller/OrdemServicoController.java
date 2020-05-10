@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.jayway.jsonpath.Option;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import algaworks.primeirojava.domain.repository.OrdemServicoRepository;
 import algaworks.primeirojava.domain.service.GestaoOrdemServicoService;
 import algaworks.primeirojava.models.OrdemServico;
+import algaworks.primeirojava.models.OrdemServicoModel;
 
 
 @RestController
@@ -44,12 +43,15 @@ public class OrdemServicoController {
     }
 
     @GetMapping("/{ordemServicoId}")
-    public ResponseEntity<OrdemServico> buscar(@PathVariable Long ordemServicoId) {
-      
-        Optional<OrdemServico> ordemServico = ordemServicoRepository.findById(ordemServicoId);
+    public ResponseEntity<OrdemServicoModel> buscar(@PathVariable Long ordemServicoId) {
+      Optional<OrdemServico> ordemServico = ordemServicoRepository.findById(ordemServicoId);
 
         if (ordemServico.isPresent()){
-            return ResponseEntity.ok (ordemServico.get());
+            OrdemServicoModel model = new OrdemServicoModel();
+            model.setId(ordemServico.get().getId());
+            model.setDescricao(ordemServico.get().getDescricao());
+            //...
+            return ResponseEntity.ok (model);
         }
 
         return ResponseEntity.notFound().build();

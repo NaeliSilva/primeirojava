@@ -1,9 +1,13 @@
 package algaworks.primeirojava.controller;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +35,13 @@ public class OrdemServicoController {
     @Autowired
     private OrdemServicoRepository ordemServicoRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrdemServico criar(@Valid @RequestBody OrdemServico ordemServico) {
-        return gestaoOrdemServicoService.criar(ordemServico);
+    public OrdemServicoModel criar(@Valid @RequestBody OrdemServico ordemServico) {
+        return toModel(gestaoOrdemServicoService.criar(ordemServico));
     }
 
     @GetMapping
@@ -47,16 +54,20 @@ public class OrdemServicoController {
       Optional<OrdemServico> ordemServico = ordemServicoRepository.findById(ordemServicoId);
 
         if (ordemServico.isPresent()){
-            OrdemServicoModel model = new OrdemServicoModel();
-            model.setId(ordemServico.get().getId());
-            model.setDescricao(ordemServico.get().getDescricao());
-            //...
-            return ResponseEntity.ok (model);
+            OrdemServicoModel ordemServicoModel = toModel(ordemServico.get());
+            return ResponseEntity.ok (ordemServicoModel);
         }
 
         return ResponseEntity.notFound().build();
-
     }
 
+    private OrdemServicoModel toModel(OrdemServicoModel ordemServico) {
+        return modelMapper.map(ordemServico, OrdemServicoModel.class);
+    }
+
+    private List<OrdemServicoModel> toCollectionModel(List<OrdemServicoModel> ordemServico) {
+        return ordemServico.stream().map(ordemServico -> toModel(ordemServico)).collect(Collectors.toList());
+
+    }
 
 }

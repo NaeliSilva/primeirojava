@@ -10,6 +10,7 @@ import algaworks.primeirojava.controller.NegocioException;
 import algaworks.primeirojava.domain.repository.*;
 import algaworks.primeirojava.models.Cliente;
 import algaworks.primeirojava.models.OrdemServico;
+import algaworks.primeirojava.models.OrdemServicoModel;
 import algaworks.primeirojava.models.StatusOrdemServico;
 
 @Service

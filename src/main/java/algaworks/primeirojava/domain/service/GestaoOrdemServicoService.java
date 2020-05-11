@@ -9,6 +9,7 @@ import algaworks.primeirojava.domain.repository.OrdemServicoRepository;
 import algaworks.primeirojava.controller.NegocioException;
 import algaworks.primeirojava.domain.repository.*;
 import algaworks.primeirojava.models.Cliente;
+import algaworks.primeirojava.models.Comentario;
 import algaworks.primeirojava.models.OrdemServico;
 import algaworks.primeirojava.models.StatusOrdemServico;
 
@@ -21,6 +22,9 @@ public class GestaoOrdemServicoService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private ComentarioRepository comentarioRepository;
+
     public OrdemServico criar(OrdemServico ordemServico) {
         Cliente cliente = clienteRepository.findById(ordemServico.getCliente().getId()).orElseThrow(() -> new NegocioException("Cliente não encontrado"));
 
@@ -31,4 +35,17 @@ public class GestaoOrdemServicoService {
         return ordemServicoRepository.save(ordemServico);
 
     }
+    
+    public Comentario adicionarComentario(Long ordemServicoId, String descricao) {
+        OrdemServico ordemServico = ordemServicoRepository.findById(ordemServicoId).orElseThrow(() -> new NegocioException("Ordem de serviço não encontrada, moço"));
+
+        Comentario comentario = new Comentario();
+        comentario.setDataEnvio(OffsetDateTime.now()); 
+        comentario.setDescricao(descricao);
+        comentario.setOrdemServico(ordemServico);
+        
+        return comentarioRepository.save(comentario);
+
+    }
+
 }

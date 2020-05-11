@@ -2,6 +2,7 @@ package algaworks.primeirojava.models;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,13 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
-import javax.validation.groups.ConvertGroup;
-
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 
-import algaworks.primeirojava.domain.ValidationGrups;
 
 @Entity
 public class OrdemServico {
@@ -26,7 +24,6 @@ public class OrdemServico {
     private Long id;
 
     @Valid
-    @ConvertGroup (from = Default.class, to = ValidationGrups.ClienteId.class)
     @ManyToOne
     private Cliente cliente;
 
@@ -39,6 +36,10 @@ public class OrdemServico {
 
     private OffsetDateTime dataAbertura;
     private OffsetDateTime dataFinalizada;
+
+    @OneToMany(mappedBy = "ordemServico")
+    private java.util.List<Comentario> comentarios = new ArrayList<>();
+
 
     public Long getId() {
         return this.id;
@@ -94,6 +95,36 @@ public class OrdemServico {
 
     public void setDataFinalizada(OffsetDateTime dataFinalizada) {
         this.dataFinalizada = dataFinalizada;
+    }
+
+    public java.util.List<Comentario> getComentarios() {
+        return this.comentarios;
+    }
+
+    public void setComentarios(java.util.List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        Cliente other = (Cliente) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
 
 }

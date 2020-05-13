@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import algaworks.primeirojava.domain.repository.OrdemServicoRepository;
+import algaworks.primeirojava.api.exceptionhandler.EntidadeNaoEncontradaException;
 import algaworks.primeirojava.controller.NegocioException;
 import algaworks.primeirojava.domain.repository.*;
 import algaworks.primeirojava.models.Cliente;
@@ -37,7 +38,7 @@ public class GestaoOrdemServicoService {
     }
     
     public Comentario adicionarComentario(Long ordemServicoId, String descricao) {
-        OrdemServico ordemServico = ordemServicoRepository.findById(ordemServicoId).orElseThrow(() -> new NegocioException("Ordem de serviço não encontrada, moço"));
+        OrdemServico ordemServico = ordemServicoRepository.findById(ordemServicoId).orElseThrow(() -> new EntidadeNaoEncontradaException("Ordem de serviço não encontrada, moço"));
 
         Comentario comentario = new Comentario();
         comentario.setDataEnvio(OffsetDateTime.now()); 

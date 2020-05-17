@@ -42,8 +42,8 @@ public class GestaoOrdemServicoService {
     public void finalizar(final Long ordemServicoId) {
         final OrdemServico ordemServico = buscar(ordemServicoId);
 
-        ordemServico.setStatus(StatusOrdemServico.FINALIZADA);
-
+        ordemServico.finalizar();
+        ordemServicoRepository.save(ordemServico);
     }
 
     public Comentario adicionarComentario(final Long ordemServicoId, final String descricao) {

@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
+import naeli.primeirojava.controller.NegocioException;
+
 
 
 @Entity
@@ -126,5 +128,23 @@ public class OrdemServico {
             return false;
         return true;
     }
+
+    public boolean podeSerFinalizada() {
+        return StatusOrdemServico.ABERTA.equals(getStatus());
+    
+    }
+
+    public boolean naoPodeSerFinalizado() {
+        return !podeSerFinalizada();
+    }
+
+	public void finalizar() {
+        if (naoPodeSerFinalizado()) {
+            throw new NegocioException("Ordem de serviço não pode ser finalizada, amada(o)");
+        }
+
+        setStatus(StatusOrdemServico.FINALIZADA);
+        setDataFinalizada(OffsetDateTime.now());
+	}
 
 }
